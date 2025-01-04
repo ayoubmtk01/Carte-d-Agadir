@@ -1,0 +1,1 @@
+var json_GAREROUTIERE_1 = {"type":"FeatureCollection","name":"GAREROUTIERE_1","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"id":"1","nom":"GARE ROUTIERE","X":99815.6,"Y":386893.0,"info":"GARE ROUTIERE AL MASSIRA AGADIR"},"geometry":{"type":"Point","coordinates":[-9.565683110060551,30.416693232079037]}}]}

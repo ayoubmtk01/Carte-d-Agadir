@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/L.Control.Layers.Tree.css">
+        <link rel="stylesheet" href="css/qgis2web.css">
+        <link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/L.Control.Layers.Tree.min.js"></script>
+        <script src="js/multi-style-layer.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/GAREROUTIERE_1.js"></script>
+        <script src="data/PLACEAVISITER_2.js"></script>
+        <script src="data/trajetaga_3.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:false, maxZoom:28, minZoom:1
+        }).fitBounds([[30.37712737645352,-9.646558353223755],[30.46916354049713,-9.43982450599277]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        // remove popup's row if "visible-with-data"
+        function removeEmptyRowsFromPopupContent(content, feature) {
+         var tempDiv = document.createElement('div');
+         tempDiv.innerHTML = content;
+         var rows = tempDiv.querySelectorAll('tr');
+         for (var i = 0; i < rows.length; i++) {
+             var td = rows[i].querySelector('td.visible-with-data');
+             var key = td ? td.id : '';
+             if (td && td.classList.contains('visible-with-data') && feature.properties[key] == null) {
+                 rows[i].parentNode.removeChild(rows[i]);
+             }
+         }
+         return tempDiv.innerHTML;
+        }
+        // add class to format popup if it contains media
+		function addClassToPopupIfMedia(content, popup) {
+			var tempDiv = document.createElement('div');
+			tempDiv.innerHTML = content;
+			if (tempDiv.querySelector('td img')) {
+				popup._contentNode.classList.add('media');
+					// Delay to force the redraw
+					setTimeout(function() {
+						popup.update();
+					}, 10);
+			} else {
+				popup._contentNode.classList.remove('media');
+			}
+		}
+        var zoomControl = L.control.zoom({
+            position: 'topleft'
+        }).addTo(map);
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_ESRIGraylight_0');
+        map.getPane('pane_ESRIGraylight_0').style.zIndex = 400;
+        var layer_ESRIGraylight_0 = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            pane: 'pane_ESRIGraylight_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_ESRIGraylight_0;
+        map.addLayer(layer_ESRIGraylight_0);
+        function pop_GAREROUTIERE_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nom'] !== null ? autolinker.link(feature.properties['nom'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['X'] !== null ? autolinker.link(feature.properties['X'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Y'] !== null ? autolinker.link(feature.properties['Y'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['info'] !== null ? autolinker.link(feature.properties['info'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_GAREROUTIERE_1_0() {
+            return {
+                pane: 'pane_GAREROUTIERE_1',
+        rotationAngle: -0.0174533,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/GAREROUTIERE_1.svg',
+            iconSize: [22.799999999999997, 22.799999999999997]
+        }),
+                interactive: true,
+            }
+        }
+        map.createPane('pane_GAREROUTIERE_1');
+        map.getPane('pane_GAREROUTIERE_1').style.zIndex = 401;
+        map.getPane('pane_GAREROUTIERE_1').style['mix-blend-mode'] = 'normal';
+        var layer_GAREROUTIERE_1 = new L.geoJson(json_GAREROUTIERE_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_GAREROUTIERE_1',
+            layerName: 'layer_GAREROUTIERE_1',
+            pane: 'pane_GAREROUTIERE_1',
+            onEachFeature: pop_GAREROUTIERE_1,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_GAREROUTIERE_1_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_GAREROUTIERE_1);
+        map.addLayer(layer_GAREROUTIERE_1);
+        function pop_PLACEAVISITER_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['nom'] !== null ? autolinker.link(feature.properties['nom'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['surface'] !== null ? autolinker.link(feature.properties['surface'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['info'] !== null ? autolinker.link(feature.properties['info'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['perimetre'] !== null ? autolinker.link(feature.properties['perimetre'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['trajet aga_longeur'] !== null ? autolinker.link(feature.properties['trajet aga_longeur'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_PLACEAVISITER_2_0(feature) {
+            switch(String(feature.properties['nom'])) {
+                case 'AGADIR OUFLA':
+                    return {
+                pane: 'pane_PLACEAVISITER_2',
+                opacity: 1,
+                color: 'rgba(215,131,227,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'COURNICHE PLAGE AGADIR':
+                    return {
+                pane: 'pane_PLACEAVISITER_2',
+                opacity: 1,
+                color: 'rgba(128,127,223,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'MARINA':
+                    return {
+                pane: 'pane_PLACEAVISITER_2',
+                opacity: 1,
+                color: 'rgba(206,14,62,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'PORT':
+                    return {
+                pane: 'pane_PLACEAVISITER_2',
+                opacity: 1,
+                color: 'rgba(208,153,70,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'SOUQ ALHAD':
+                    return {
+                pane: 'pane_PLACEAVISITER_2',
+                opacity: 1,
+                color: 'rgba(43,200,231,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case 'STADE ADRAR':
+                    return {
+                pane: 'pane_PLACEAVISITER_2',
+                opacity: 1,
+                color: 'rgba(150,230,52,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_PLACEAVISITER_2');
+        map.getPane('pane_PLACEAVISITER_2').style.zIndex = 402;
+        map.getPane('pane_PLACEAVISITER_2').style['mix-blend-mode'] = 'normal';
+        var layer_PLACEAVISITER_2 = new L.geoJson(json_PLACEAVISITER_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_PLACEAVISITER_2',
+            layerName: 'layer_PLACEAVISITER_2',
+            pane: 'pane_PLACEAVISITER_2',
+            onEachFeature: pop_PLACEAVISITER_2,
+            style: style_PLACEAVISITER_2_0,
+        });
+        bounds_group.addLayer(layer_PLACEAVISITER_2);
+        map.addLayer(layer_PLACEAVISITER_2);
+        function pop_trajetaga_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['longeur'] !== null ? autolinker.link(feature.properties['longeur'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['duree'] !== null ? autolinker.link(feature.properties['duree'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            var content = removeEmptyRowsFromPopupContent(popupContent, feature);
+			layer.on('popupopen', function(e) {
+				addClassToPopupIfMedia(content, e.popup);
+			});
+			layer.bindPopup(content, { maxHeight: 400 });
+        }
+
+        function style_trajetaga_3_0() {
+            return {
+                pane: 'pane_trajetaga_3',
+                opacity: 1,
+                color: 'rgba(112,112,112,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 5.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        function style_trajetaga_3_1() {
+            return {
+                pane: 'pane_trajetaga_3',
+                opacity: 1,
+                color: 'rgba(255,255,255,1.0)',
+                dashArray: '8.0,4.0',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        function style_trajetaga_3_2() {
+            return {
+                pane: 'pane_trajetaga_3',
+                interactive: true,
+            }
+        }
+        function style_trajetaga_3_3() {
+            return {
+                pane: 'pane_trajetaga_3',
+                interactive: true,
+            }
+        }
+        function style_trajetaga_3_4() {
+            return {
+                pane: 'pane_trajetaga_3',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_trajetaga_3');
+        map.getPane('pane_trajetaga_3').style.zIndex = 403;
+        map.getPane('pane_trajetaga_3').style['mix-blend-mode'] = 'normal';
+        var layer_trajetaga_3 = new L.geoJson.multiStyle(json_trajetaga_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_trajetaga_3',
+            layerName: 'layer_trajetaga_3',
+            pane: 'pane_trajetaga_3',
+            onEachFeature: pop_trajetaga_3,
+            styles: [style_trajetaga_3_0,style_trajetaga_3_1,style_trajetaga_3_2,style_trajetaga_3_3,style_trajetaga_3_4,]
+        });
+        bounds_group.addLayer(layer_trajetaga_3);
+        map.addLayer(layer_trajetaga_3);
+        map.on("zoomend", function(){
+
+                if (map.hasLayer(layer_PLACEAVISITER_2)) {
+                    if (map.getZoom() <= 19 && map.getZoom() >= 19) {
+                        layer_PLACEAVISITER_2.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_PLACEAVISITER_2.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+        });
+        setBounds();
+        var i = 0;
+        layer_GAREROUTIERE_1.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['nom'] !== null?String('<div style="color: #000000; font-size: 10pt; font-family: \'MS Shell Dlg 2\', sans-serif;">' + layer.feature.properties['nom']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_GAREROUTIERE_1'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_PLACEAVISITER_2.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['nom'] !== null?String('<div style="color: #000000; font-size: 10pt; font-family: \'Microsoft Tai Le\', sans-serif;">' + layer.feature.properties['nom']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_PLACEAVISITER_2'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_trajetaga_3.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((exp_label_trajetaga_3_eval_expression(context) !== null?String('<div style="color: #000000; font-size: 9pt; font-family: \'MS Shell Dlg 2\', sans-serif;">' + exp_label_trajetaga_3_eval_expression(context)) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_trajetaga_3'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+                if (map.hasLayer(layer_PLACEAVISITER_2)) {
+                    if (map.getZoom() <= 19 && map.getZoom() >= 19) {
+                        layer_PLACEAVISITER_2.eachLayer(function (layer) {
+                            layer.openTooltip();
+                        });
+                    } else {
+                        layer_PLACEAVISITER_2.eachLayer(function (layer) {
+                            layer.closeTooltip();
+                        });
+                    }
+                }
+        resetLabels([layer_GAREROUTIERE_1,layer_PLACEAVISITER_2,layer_trajetaga_3]);
+        map.on("zoomend", function(){
+            resetLabels([layer_GAREROUTIERE_1,layer_PLACEAVISITER_2,layer_trajetaga_3]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_GAREROUTIERE_1,layer_PLACEAVISITER_2,layer_trajetaga_3]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_GAREROUTIERE_1,layer_PLACEAVISITER_2,layer_trajetaga_3]);
+        });
+        </script>
+    </body>
+</html>
